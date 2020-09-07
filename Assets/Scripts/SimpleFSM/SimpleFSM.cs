@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class SimpleFSM : FSM 
@@ -26,7 +27,15 @@ public class SimpleFSM : FSM
 
     //Whether the NPC is destroyed or not
     private bool bDead;
-    private int health;
+    public int health;
+
+    //Health Bar
+    public Text healthBar;
+
+    //Change color based on the FSM state
+    public Material patrolColor;
+    public Material chaseColor;
+    public Material attackColor;
 
 
     //Initialize the Finite state machine for the NPC tank
@@ -74,7 +83,13 @@ public class SimpleFSM : FSM
 
         //Go to dead state is no health left
         if (health <= 0)
+        {
             curState = FSMState.Dead;
+            health = 0;
+        }
+
+        healthBar.text = "HP: " + health;
+
     }
 
     /// <summary>
@@ -98,16 +113,23 @@ public class SimpleFSM : FSM
 
         //Rotate to the target point
         Quaternion targetRotation = Quaternion.LookRotation(destPos - transform.position);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * curRotSpeed);  
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * curRotSpeed);
 
         //Go Forward
         transform.Translate(Vector3.forward * Time.deltaTime * curSpeed);
+
+        //Change color
+        foreach (Renderer rend in GetComponentsInChildren<Renderer>())
+        {
+            rend.material = patrolColor;
+
+        }
     }
 
-    /// <summary>
-    /// Chase state
-    /// </summary>
-    protected void UpdateChaseState()
+        /// <summary>
+        /// Chase state
+        /// </summary>
+        protected void UpdateChaseState()
     {
         //Set the target position as the player position
         destPos = playerTransform.position;
@@ -127,6 +149,13 @@ public class SimpleFSM : FSM
 
         //Go Forward
         transform.Translate(Vector3.forward * Time.deltaTime * curSpeed);
+
+        //Change color
+        foreach (Renderer rend in GetComponentsInChildren<Renderer>())
+        {
+            rend.material = chaseColor;
+
+        }
     }
 
     /// <summary>
@@ -162,6 +191,13 @@ public class SimpleFSM : FSM
 
         //Shoot the bullets
         ShootBullet();
+
+        //Change color
+        foreach (Renderer rend in GetComponentsInChildren<Renderer>())
+        {
+            rend.material = attackColor;
+
+        }
     }
 
     /// <summary>
