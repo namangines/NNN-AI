@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class PlayerTankController : MonoBehaviour
 {
@@ -15,6 +16,10 @@ public class PlayerTankController : MonoBehaviour
     //Bullet shooting rate
     protected float shootRate;
     protected float elapsedTime;
+
+    //health bar
+    public int health = 100;
+    public Text healthBar;
 
     void Start()
     {
@@ -36,6 +41,14 @@ public class PlayerTankController : MonoBehaviour
     {
         UpdateControl();
         UpdateWeapon();
+
+        //player health so they die on 0 
+        if(health <= 0)
+        {
+            health = 0;
+            this.gameObject.SetActive(false);
+        }
+
     }
     
     void UpdateControl()
@@ -101,4 +114,13 @@ public class PlayerTankController : MonoBehaviour
             }
         }
     }
+
+    //minus player health like the enemies 
+    void OnCollisionEnter(Collision collision)
+    {
+        //Reduce health
+        if (collision.gameObject.tag == "Bullet")
+            health -= collision.gameObject.GetComponent<Bullet>().damage;
+    }
+
 }
