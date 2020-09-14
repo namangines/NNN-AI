@@ -50,6 +50,11 @@ public class SimpleFSM : FSM
     public Material danceColor;
     public Material retreatColor;
 
+    // Dance Settings
+    float angle = 360.0f; 
+    float time = 1.0f; 
+    Vector3 axis = Vector3.up; 
+
 
     //Initialize the Finite state machine for the NPC tank
     protected override void Initialize()
@@ -239,7 +244,7 @@ public class SimpleFSM : FSM
         timeInState += Time.deltaTime;
         if(timeInState >= 3f) curState = FSMState.Patrol;
         //Put dance code here
-
+        GetComponent<Transform>().RotateAround(Vector3.zero, axis, angle * Time.deltaTime / time);
 
 
         //Change color
