@@ -46,7 +46,7 @@ public abstract class FSMState
         }
 
         map.Add(transition, id);
-        Debug.Log("Added : " + transition + " with ID : " + id);
+        Debug.Log("State ID" + this.ID + " has added transition " + transition + " to ID " + id);
     }
 
     /// <summary>
