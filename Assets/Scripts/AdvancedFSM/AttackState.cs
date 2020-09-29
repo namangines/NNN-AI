@@ -18,7 +18,7 @@ public class AttackState : FSMState
     {
         //Check the distance with the player tank
         float dist = Vector3.Distance(npc.position, player.position);
-        if (dist >= attackDist && dist < chaseDist)
+        if (dist >= 200.0f && dist < 300.0f)
         {
             //Rotate to the target point
             Quaternion targetRotation = Quaternion.LookRotation(destPos - npc.position);
@@ -31,7 +31,7 @@ public class AttackState : FSMState
             npc.GetComponent<NPCTankController>().SetTransition(Transition.SawPlayer);
         }
         //Transition to patrol is the tank become too far
-        else if (dist >= chaseDist)
+        else if (dist >= 300.0f)
         {
             Debug.Log("Switch to Patrol State");
             npc.GetComponent<NPCTankController>().SetTransition(Transition.LostPlayer);

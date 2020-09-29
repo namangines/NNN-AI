@@ -25,8 +25,6 @@ public abstract class FSMState
     protected Transform[] waypoints;
     protected float curRotSpeed;
     protected float curSpeed;
-    protected static float chaseDist = 300f;
-    protected static float attackDist = 200f;
 
     public void AddTransition(Transition transition, FSMStateID id)
     {
@@ -46,7 +44,7 @@ public abstract class FSMState
         }
 
         map.Add(transition, id);
-        Debug.Log("State ID" + this.ID + " has added transition " + transition + " to ID " + id);
+        Debug.Log("Added : " + transition + " with ID : " + id);
     }
 
     /// <summary>

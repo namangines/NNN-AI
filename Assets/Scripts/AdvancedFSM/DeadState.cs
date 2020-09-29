@@ -15,6 +15,6 @@ public class DeadState : FSMState
 
     public override void Act(Transform player, Transform npc)
     {
-        //Do Nothing for the dead are dead
+        //Do Nothing for the dead state
     }
 }
