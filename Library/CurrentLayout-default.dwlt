@@ -21,7 +21,7 @@ MonoBehaviour:
   m_ShowMode: 4
   m_Title: 
   m_RootView: {fileID: 2}
-  m_MinSize: {x: 875, y: 392}
+  m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
   m_Maximized: 1
 --- !u!114 &2
@@ -46,7 +46,7 @@ MonoBehaviour:
     y: 0
     width: 1920
     height: 997
-  m_MinSize: {x: 875, y: 392}
+  m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &3
 MonoBehaviour:
@@ -115,7 +115,7 @@ MonoBehaviour:
   m_MinSize: {x: 679, y: 342}
   m_MaxSize: {x: 12004, y: 8042}
   vertical: 0
-  controlID: 132
+  controlID: 123
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -394,10 +394,10 @@ MonoBehaviour:
   m_ViewDataDictionary: {fileID: 0}
   m_SceneHierarchy:
     m_TreeViewState:
-      scrollPos: {x: 0, y: 230}
-      m_SelectedIDs: fe3b0000
-      m_LastClickedID: 15358
-      m_ExpandedIDs: d6f5ffffb83a0000fe3b0000
+      scrollPos: {x: 0, y: 0}
+      m_SelectedIDs: 
+      m_LastClickedID: 0
+      m_ExpandedIDs: 4efbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -507,11 +507,11 @@ MonoBehaviour:
   m_Rotation:
     m_Target: {x: 0.0015668664, y: -0.8551843, z: 0.5185805, w: 0.0022108117}
     speed: 2
-    m_Value: {x: 0.0000111186355, y: -0.85507035, z: 0.51851207, w: -0.000354699}
+    m_Value: {x: -0.0015668664, y: 0.8551843, z: -0.5185805, w: -0.0022108115}
   m_Size:
     m_Target: 1360.7261
     speed: 2
-    m_Value: 1424.844
+    m_Value: 1360.7261
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -665,20 +665,20 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets
+    - Assets/Scripts/AdvancedFSM
   m_ViewMode: 1
   m_StartGridSize: 63
   m_LastFolders:
-  - Assets
+  - Assets/Scripts/AdvancedFSM
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\nodie\OneDrive\Documents\GitHub\NNN-AI
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 603f0000
-    m_LastClickedID: 16224
-    m_ExpandedIDs: 00000000603f0000623f0000643f0000663f0000683f00006a3f00006c3f0000
+    m_SelectedIDs: ea3d0000
+    m_LastClickedID: 15850
+    m_ExpandedIDs: 000000009a3d00009c3d00009e3d0000a03d0000a23d0000a43d0000a63d0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -706,7 +706,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000603f0000623f0000643f0000663f0000683f00006a3f00006c3f0000
+    m_ExpandedIDs: 000000009a3d00009c3d00009e3d0000a03d0000a23d0000a43d0000a63d0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -731,9 +731,9 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: fe3b0000
-    m_LastClickedInstanceID: 15358
-    m_HadKeyboardFocusLastEvent: 0
+    m_SelectedInstanceIDs: 
+    m_LastClickedInstanceID: 0
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c6230000c6440000
     m_RenameOverlay:
       m_UserAcceptedRename: 0

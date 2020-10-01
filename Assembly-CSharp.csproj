@@ -64,21 +64,32 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\DisplayWithoutEdit.cs" />
+    <Compile Include="Assets\Priority Queue Structure\FastPriorityQueue.cs" />
+    <Compile Include="Assets\Priority Queue Structure\FastPriorityQueueNode.cs" />
+    <Compile Include="Assets\Priority Queue Structure\IFixedSizePriorityQueue.cs" />
+    <Compile Include="Assets\Priority Queue Structure\IPriorityQueue.cs" />
     <Compile Include="Assets\Scripts\AdvancedFSM\AdvancedFSM.cs" />
     <Compile Include="Assets\Scripts\AdvancedFSM\AttackState.cs" />
     <Compile Include="Assets\Scripts\AdvancedFSM\ChaseState.cs" />
     <Compile Include="Assets\Scripts\AdvancedFSM\DeadState.cs" />
+    <Compile Include="Assets\Scripts\AdvancedFSM\FSM.cs" />
     <Compile Include="Assets\Scripts\AdvancedFSM\FSMState.cs" />
+    <Compile Include="Assets\Scripts\AdvancedFSM\ManagerEditor.cs" />
     <Compile Include="Assets\Scripts\AdvancedFSM\NPCTankController.cs" />
+    <Compile Include="Assets\Scripts\AdvancedFSM\OffDutyState.cs" />
     <Compile Include="Assets\Scripts\AdvancedFSM\PatrolState.cs" />
+    <Compile Include="Assets\Scripts\AdvancedFSM\RepairState.cs" />
+    <Compile Include="Assets\Scripts\AdvancedFSM\Waypoint.cs" />
     <Compile Include="Assets\Scripts\Misc\AutoDestruct.cs" />
     <Compile Include="Assets\Scripts\Misc\Bullet.cs" />
     <Compile Include="Assets\Scripts\Misc\GameManager.cs" />
     <Compile Include="Assets\Scripts\Misc\PlayerTankController.cs" />
-    <Compile Include="Assets\Scripts\SimpleFSM\FSM.cs" />
+    <Compile Include="Assets\Scripts\SimpleFSM\FSMSimple.cs" />
     <Compile Include="Assets\Scripts\SimpleFSM\SimpleFSM.cs" />
+    <Compile Include="Assets\Scripts\WaypointManager.cs" />
     <Compile Include="Assets\Scripts\startingText.cs" />
     <None Include="Assets\ParticleEffects\Shaders\Add_Layer.shader" />
+    <None Include="Assets\Priority Queue Structure\LICENSE.txt" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.8f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

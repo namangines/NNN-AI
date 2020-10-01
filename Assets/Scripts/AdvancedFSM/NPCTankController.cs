@@ -60,7 +60,7 @@ public class NPCTankController : AdvancedFSM
         PatrolState patrol = new PatrolState();
         patrol.AddTransition(Transition.SawPlayer, FSMStateID.Chasing);
         patrol.AddTransition(Transition.NoHealth, FSMStateID.Dead);
-        patrol.AddTransition(Transition.GotBored, FSMStateID.Dance);
+        patrol.AddTransition(Transition.GotBored, FSMStateID.Bored);
         patrol.AddTransition(Transition.WantsTimeOff, FSMStateID.OffDuty);
 
         ChaseState chase = new ChaseState();

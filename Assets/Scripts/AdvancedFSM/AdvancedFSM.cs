@@ -31,7 +31,7 @@ public enum FSMStateID
     Attacking,
     Dead,
     Repairing,
-    Dance,
+    Bored,
     OffDuty,
 }
 
