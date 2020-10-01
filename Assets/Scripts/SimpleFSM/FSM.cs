@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class FSM : MonoBehaviour 
 {
@@ -8,9 +8,12 @@ public class FSM : MonoBehaviour
 
     //Next destination position of the NPC Tank
     protected Vector3 destPos;
+    //The path that must be taken to get to destPos from current position
+    protected Stack<Vector3> destPath;
 
     //List of points for patrolling
-    protected GameObject[] pointList;
+    //This is now handled by the WaypointManager
+    ///protected GameObject[] pointList;
 
     //Bullet shooting rate
     protected float shootRate;

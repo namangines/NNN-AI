@@ -1,5 +1,6 @@
 using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
+using TankPathingSystem;
 
 public class NPCTankController : AdvancedFSM 
 {
@@ -55,30 +56,26 @@ public class NPCTankController : AdvancedFSM
 
     private void ConstructFSM()
     {
-        //Get the list of points
-        pointList = GameObject.FindGameObjectsWithTag("WandarPoint");
 
-        Transform[] waypoints = new Transform[pointList.Length];
-        int i = 0;
-        foreach(GameObject obj in pointList)
-        {
-            waypoints[i] = obj.transform;
-            i++;
-        }
-
-        PatrolState patrol = new PatrolState(waypoints);
+        PatrolState patrol = new PatrolState();
         patrol.AddTransition(Transition.SawPlayer, FSMStateID.Chasing);
         patrol.AddTransition(Transition.NoHealth, FSMStateID.Dead);
+        patrol.AddTransition(Transition.GotBored, FSMStateID.Dance);
+        patrol.AddTransition(Transition.WantsTimeOff, FSMStateID.OffDuty);
 
-        ChaseState chase = new ChaseState(waypoints);
+        ChaseState chase = new ChaseState();
         chase.AddTransition(Transition.LostPlayer, FSMStateID.Patrolling);
         chase.AddTransition(Transition.ReachPlayer, FSMStateID.Attacking);
         chase.AddTransition(Transition.NoHealth, FSMStateID.Dead);
 
-        AttackState attack = new AttackState(waypoints);
+        AttackState attack = new AttackState();
         attack.AddTransition(Transition.LostPlayer, FSMStateID.Patrolling);
         attack.AddTransition(Transition.SawPlayer, FSMStateID.Chasing);
         attack.AddTransition(Transition.NoHealth, FSMStateID.Dead);
+
+        OffDutyState offduty = new OffDutyState(rigidbody.transform);
+        offduty.AddTransition(Transition.SawPlayer, FSMStateID.Chasing);
+        offduty.AddTransition(Transition.RestedLongEnough, FSMStateID.Patrolling);
 
         DeadState dead = new DeadState();
         dead.AddTransition(Transition.NoHealth, FSMStateID.Dead);

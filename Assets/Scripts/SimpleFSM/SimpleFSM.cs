@@ -68,9 +68,6 @@ public class SimpleFSM : FSM
         maxHealth = 100;
         health = maxHealth;
 
-        //Get the list of points
-        pointList = GameObject.FindGameObjectsWithTag("WandarPoint");
-
         //Set Random destination point first
         FindNextPoint();
 
@@ -330,19 +327,18 @@ public class SimpleFSM : FSM
     /// </summary>
     protected void FindNextPoint()
     {
-        print("Finding next point");
-        int rndIndex = Random.Range(0, pointList.Length);
         float rndRadius = 10.0f;
 
         Vector3 rndPosition = Vector3.zero;
-        destPos = pointList[rndIndex].transform.position + rndPosition;
+        Vector3 tempdestPos = TankPathingSystem.WaypointManager.Instance.GetRandomWaypoint().transform.position;
+        destPos = tempdestPos + rndPosition;
 
         //Check Range
         //Prevent to decide the random point as the same as before
         if (IsInCurrentRange(destPos))
         {
             rndPosition = new Vector3(Random.Range(-rndRadius, rndRadius), 0.0f, Random.Range(-rndRadius, rndRadius));
-            destPos = pointList[rndIndex].transform.position + rndPosition;
+            destPos = tempdestPos + rndPosition;
         }
     }
 

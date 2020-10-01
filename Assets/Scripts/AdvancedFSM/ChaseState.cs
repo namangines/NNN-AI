@@ -3,22 +3,19 @@ using System.Collections;
 
 public class ChaseState : FSMState
 {
-    public ChaseState(Transform[] wp) 
+    public ChaseState() 
     { 
-        waypoints = wp;
         stateID = FSMStateID.Chasing;
 
         curRotSpeed = 1.0f;
         curSpeed = 100.0f;
 
-        //find next Waypoint position
-        FindNextPoint();
     }
 
     public override void Reason(Transform player, Transform npc)
     {
         //Set the target position as the player position
-        destPos = player.position;
+        Vector3 destPos = player.position;
 
         //Check the distance with player tank
         //When the distance is near, transition to attack state
@@ -39,7 +36,7 @@ public class ChaseState : FSMState
     public override void Act(Transform player, Transform npc)
     {
         //Rotate to the target point
-        destPos = player.position;
+        Vector3 destPos = player.position;
 
         Quaternion targetRotation = Quaternion.LookRotation(destPos - npc.position);
         npc.rotation = Quaternion.Slerp(npc.rotation, targetRotation, Time.deltaTime * curRotSpeed);

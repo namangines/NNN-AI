@@ -17,6 +17,10 @@ public enum Transition
     ReachPlayer,
     LostPlayer,
     NoHealth,
+    GotBored,
+    WantsTimeOff,
+    Hurt,
+    RestedLongEnough,
 }
 
 public enum FSMStateID
@@ -26,6 +30,9 @@ public enum FSMStateID
     Chasing,
     Attacking,
     Dead,
+    Repairing,
+    Dance,
+    OffDuty,
 }
 
 public class AdvancedFSM : FSM 

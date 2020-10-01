@@ -3,15 +3,12 @@ using System.Collections;
 
 public class AttackState : FSMState
 {
-    public AttackState(Transform[] wp) 
+    public AttackState() 
     { 
-        waypoints = wp;
         stateID = FSMStateID.Attacking;
         curRotSpeed = 1.0f;
         curSpeed = 100.0f;
 
-        //find next Waypoint position
-        FindNextPoint();
     }
 
     public override void Reason(Transform player, Transform npc)
@@ -20,12 +17,7 @@ public class AttackState : FSMState
         float dist = Vector3.Distance(npc.position, player.position);
         if (dist >= 200.0f && dist < 300.0f)
         {
-            //Rotate to the target point
-            Quaternion targetRotation = Quaternion.LookRotation(destPos - npc.position);
-            npc.rotation = Quaternion.Slerp(npc.rotation, targetRotation, Time.deltaTime * curRotSpeed);
-
-            //Go Forward
-            npc.Translate(Vector3.forward * Time.deltaTime * curSpeed);
+            MoveStraightTowards(npc, player);
 
             Debug.Log("Switch to Chase State");
             npc.GetComponent<NPCTankController>().SetTransition(Transition.SawPlayer);
@@ -41,7 +33,7 @@ public class AttackState : FSMState
     public override void Act(Transform player, Transform npc)
     {
         //Set the target position as the player position
-        destPos = player.position;
+        Vector3 destPos = player.position;
 
         //Always Turn the turret towards the player
         Transform turret = npc.GetComponent<NPCTankController>().turret;

@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using TankPathingSystem;
 
 /// <summary>
 /// This class is adapted and modified from the FSM implementation class available on UnifyCommunity website
@@ -21,8 +22,10 @@ public abstract class FSMState
     protected Dictionary<Transition, FSMStateID> map = new Dictionary<Transition, FSMStateID>();
     protected FSMStateID stateID;
     public FSMStateID ID { get { return stateID; } }
-    protected Vector3 destPos;
-    protected Transform[] waypoints;
+    protected Waypoint destWaypoint;
+    protected Stack<Waypoint> destPath;
+    protected Waypoint nextWaypoint;
+    protected float waitTimer;
     protected float curRotSpeed;
     protected float curSpeed;
 
@@ -106,15 +109,26 @@ public abstract class FSMState
     /// </summary>
     public abstract void Act(Transform player, Transform npc);
 
-    /// <summary>
+    /// 
     /// Find the next semi-random patrol point
-    /// </summary>
-    public void FindNextPoint()
+    /// not needed
+    ///
+    //public void FindNextPoint()
+    //{
+    //    //Debug.Log("Finding next point");
+    //    int rndIndex = Random.Range(0, waypoints.Length);
+    //    Vector3 rndPosition = Vector3.zero;
+    //    destPos = waypoints[rndIndex].position + rndPosition;
+    //}
+
+    protected void MoveStraightTowards(Transform moveable, Transform target)
     {
-        //Debug.Log("Finding next point");
-        int rndIndex = Random.Range(0, waypoints.Length);
-        Vector3 rndPosition = Vector3.zero;
-        destPos = waypoints[rndIndex].position + rndPosition;
+        //2. Rotate to the target point
+        Quaternion targetRotation = Quaternion.LookRotation(target.position - moveable.position);
+        moveable.rotation = Quaternion.Slerp(moveable.rotation, targetRotation, Time.deltaTime * curRotSpeed);
+
+        //3. Go Forward
+        moveable.Translate(Vector3.forward * Time.deltaTime * curSpeed);
     }
 
     /// <summary>
