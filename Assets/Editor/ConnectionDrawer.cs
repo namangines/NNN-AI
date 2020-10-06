@@ -12,6 +12,8 @@ public class ConnectionDrawer : PropertyDrawer
         label.text = property.FindPropertyRelative("neighborName").stringValue;
         Rect contentPosition = EditorGUI.PrefixLabel(position, label);
         EditorGUI.indentLevel = 0;
-        EditorGUI.PropertyField(contentPosition, property.FindPropertyRelative("weight"), GUIContent.none);
+        EditorGUI.PropertyField(contentPosition, property.FindPropertyRelative("neighborID"), GUIContent.none);
+        EditorGUI.indentLevel = 0;
+        EditorGUI.PropertyField(new Rect(contentPosition.x+50, contentPosition.y, contentPosition.width, contentPosition.height), property.FindPropertyRelative("disttoneighbor"));
     }
 }

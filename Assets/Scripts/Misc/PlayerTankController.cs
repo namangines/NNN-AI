@@ -5,16 +5,17 @@ using UnityEngine.UI;
 public class PlayerTankController : MonoBehaviour
 {
     public GameObject Bullet;
+    public PauseMenu menu;
 	
     private Transform Turret;
     private Transform bulletSpawnPoint;    
     private float curSpeed, targetSpeed, rotSpeed;
     private float turretRotSpeed = 10.0f;
-    private float maxForwardSpeed = 300.0f;
-    private float maxBackwardSpeed = -300.0f;
+    private float maxForwardSpeed = 250.0f;
+    private float maxBackwardSpeed = -200.0f;
 
     //Bullet shooting rate
-    protected float shootRate;
+    protected float shootRate = 1.2f;
     protected float elapsedTime;
 
     //health bar
@@ -46,9 +47,11 @@ public class PlayerTankController : MonoBehaviour
         if(health <= 0)
         {
             health = 0;
+            menu.UpdateText("YOU DIED");
+            menu.Pause();
             this.gameObject.SetActive(false);
         }
-
+        elapsedTime += Time.deltaTime;
     }
     
     void UpdateControl()
@@ -110,17 +113,21 @@ public class PlayerTankController : MonoBehaviour
                 elapsedTime = 0.0f;
 
                 //Also Instantiate over the PhotonNetwork
-                Instantiate(Bullet, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
+                Instantiate(Bullet, bulletSpawnPoint.position, bulletSpawnPoint.rotation).layer = LayerMask.GetMask("Default");
+
             }
         }
     }
 
+
     //minus player health like the enemies 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider collision)
     {
-        //Reduce health
-        if (collision.gameObject.tag == "Bullet")
+        if (collision.CompareTag("Bullet"))
+        {
+            Debug.LogWarning("Player hit!!");
             health -= collision.gameObject.GetComponent<Bullet>().damage;
+        }
     }
 
 }

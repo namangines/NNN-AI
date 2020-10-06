@@ -8,7 +8,7 @@ public class Bullet : MonoBehaviour
 
     public float Speed = 600.0f;
     public float LifeTime = 3.0f;
-    public int damage = 50;
+    public int damage = 49;
 
     void Start()
     {
@@ -21,10 +21,9 @@ public class Bullet : MonoBehaviour
 			transform.forward * Speed * Time.deltaTime;       
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider collision)
     {
-        ContactPoint contact = collision.contacts[0];
-        Instantiate(Explosion, contact.point, Quaternion.identity);
+        //Instantiate(Explosion, contact.point, Quaternion.identity);
         Destroy(gameObject);
     }
 }

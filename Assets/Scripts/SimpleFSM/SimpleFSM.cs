@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
-public class SimpleFSM : FSM
+public class SimpleFSM : FSMSimple
 {
     public enum FSMState
     {

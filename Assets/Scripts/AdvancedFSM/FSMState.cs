@@ -22,12 +22,13 @@ public abstract class FSMState
     protected Dictionary<Transition, FSMStateID> map = new Dictionary<Transition, FSMStateID>();
     protected FSMStateID stateID;
     public FSMStateID ID { get { return stateID; } }
-    protected Waypoint destWaypoint;
-    protected Stack<Waypoint> destPath;
+    public Waypoint destination; //Optional ability to cache final destinations for states such as offduty and repair
+    public NPCTankController tank; //Only public for the Gizmodrawer to see, otherwise should be protected //Same as above
     protected Waypoint nextWaypoint;
     protected float waitTimer;
     protected float curRotSpeed;
     protected float curSpeed;
+    protected float sightRadius;
 
     public void AddTransition(Transition transition, FSMStateID id)
     {

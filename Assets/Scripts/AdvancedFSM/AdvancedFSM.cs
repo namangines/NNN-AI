@@ -21,6 +21,7 @@ public enum Transition
     WantsTimeOff,
     Hurt,
     RestedLongEnough,
+    Healed,
 }
 
 public enum FSMStateID
@@ -29,10 +30,10 @@ public enum FSMStateID
     Patrolling,
     Chasing,
     Attacking,
-    Dead,
+    OffDuty,
     Repairing,
     Bored,
-    OffDuty,
+    Dead
 }
 
 public class AdvancedFSM : FSM 
@@ -84,6 +85,7 @@ public class AdvancedFSM : FSM
 
         //If no state in the current then add the state to the list
         fsmStates.Add(fsmState);
+        Debug.Log("FSM: Added state " + fsmState.ID);
     }
 
     /// <summary>
@@ -119,6 +121,7 @@ public class AdvancedFSM : FSM
     /// </summary>
     public void PerformTransition(Transition trans)
     {
+        Debug.Log("Transitioning between states");
         // Check for NullTransition before changing the current state
         if (trans == Transition.None)
         {
@@ -141,8 +144,10 @@ public class AdvancedFSM : FSM
             if (state.ID == currentStateID)
             {
                 currentState = state;
-                break;
+                return;
             }
         }
+
+        Debug.LogError("State " + id + " is not inside fsmStates");
     }
 }

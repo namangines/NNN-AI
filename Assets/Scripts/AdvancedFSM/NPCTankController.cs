@@ -2,10 +2,17 @@ using UnityEngine;
 using System.Collections.Generic;
 using TankPathingSystem;
 
-public class NPCTankController : AdvancedFSM 
+public class NPCTankController : AdvancedFSM
 {
+    //public Waypoint destWaypoint;
+    //public Stack<Waypoint> destPath = new Stack<Waypoint>();
     public GameObject Bullet;
-    private int health;
+    public Light Sightlight;
+    public Camera Sight;
+    public Transform SightPoint;
+
+    public int health;
+    public float timeSinceOffduty = 0.0f;
 
     // We overwrite the deprecated built-in `rigidbody` variable.
     new private Rigidbody rigidbody;
@@ -16,7 +23,7 @@ public class NPCTankController : AdvancedFSM
         health = 100;
 
         elapsedTime = 0.0f;
-        shootRate = 2.0f;
+        shootRate = .5f;
 
         //Get the target enemy(Player)
         GameObject objPlayer = GameObject.FindGameObjectWithTag("Player");
@@ -57,32 +64,44 @@ public class NPCTankController : AdvancedFSM
     private void ConstructFSM()
     {
 
-        PatrolState patrol = new PatrolState();
+        PatrolState patrol = new PatrolState(this);
         patrol.AddTransition(Transition.SawPlayer, FSMStateID.Chasing);
+        patrol.AddTransition(Transition.ReachPlayer, FSMStateID.Attacking);
         patrol.AddTransition(Transition.NoHealth, FSMStateID.Dead);
         patrol.AddTransition(Transition.GotBored, FSMStateID.Bored);
         patrol.AddTransition(Transition.WantsTimeOff, FSMStateID.OffDuty);
+        patrol.AddTransition(Transition.Hurt, FSMStateID.Repairing);
 
-        ChaseState chase = new ChaseState();
+        ChaseState chase = new ChaseState(this);
         chase.AddTransition(Transition.LostPlayer, FSMStateID.Patrolling);
         chase.AddTransition(Transition.ReachPlayer, FSMStateID.Attacking);
         chase.AddTransition(Transition.NoHealth, FSMStateID.Dead);
+        chase.AddTransition(Transition.Hurt, FSMStateID.Repairing);
 
-        AttackState attack = new AttackState();
+        AttackState attack = new AttackState(this);
         attack.AddTransition(Transition.LostPlayer, FSMStateID.Patrolling);
         attack.AddTransition(Transition.SawPlayer, FSMStateID.Chasing);
         attack.AddTransition(Transition.NoHealth, FSMStateID.Dead);
+        attack.AddTransition(Transition.Hurt, FSMStateID.Repairing);
 
-        OffDutyState offduty = new OffDutyState(rigidbody.transform);
+        OffDutyState offduty = new OffDutyState(rigidbody.transform, this);
         offduty.AddTransition(Transition.SawPlayer, FSMStateID.Chasing);
         offduty.AddTransition(Transition.RestedLongEnough, FSMStateID.Patrolling);
+        offduty.AddTransition(Transition.NoHealth, FSMStateID.Dead);
+
+        RepairState repair = new RepairState(this);
+        repair.AddTransition(Transition.Healed, FSMStateID.Patrolling);
+        repair.AddTransition(Transition.NoHealth, FSMStateID.Dead);
 
         DeadState dead = new DeadState();
         dead.AddTransition(Transition.NoHealth, FSMStateID.Dead);
 
+
         AddFSMState(patrol);
         AddFSMState(chase);
         AddFSMState(attack);
+        AddFSMState(offduty);
+        AddFSMState(repair);
         AddFSMState(dead);
     }
 
@@ -90,12 +109,12 @@ public class NPCTankController : AdvancedFSM
     /// Check the collision with the bullet
     /// </summary>
     /// <param name="collision"></param>
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider collision)
     {
         //Reduce health
         if (collision.gameObject.tag == "Bullet")
         {
-            health -= 50;
+            health -= collision.gameObject.GetComponent<Bullet>().damage; ;
 
             if (health <= 0)
             {
@@ -126,8 +145,33 @@ public class NPCTankController : AdvancedFSM
     {
         if (elapsedTime >= shootRate)
         {
-            Instantiate(Bullet, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
+            Instantiate(Bullet, bulletSpawnPoint.position, bulletSpawnPoint.rotation).GetComponent<Bullet>().LifeTime = 4f;
             elapsedTime = 0.0f;
         }
+    }
+
+    public void ChangeLightColor(Color color)
+    {
+        Sightlight.color = color;
+    }
+
+    public bool IsInsideSightFrustrum(Collider collider)
+    {
+        Plane[] planes = GeometryUtility.CalculateFrustumPlanes(Sight);
+        return GeometryUtility.TestPlanesAABB(planes, collider.bounds);
+    }
+
+    public bool HasLineOfSight(Collider target)
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(SightPoint.position, target.transform.position - SightPoint.position, out hit, Sight.farClipPlane, LayerMask.GetMask("Default"), QueryTriggerInteraction.UseGlobal))
+        {
+            if(target == hit.collider)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

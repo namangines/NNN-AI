@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 using System;
 
 namespace TankPathingSystem
@@ -19,16 +17,18 @@ namespace TankPathingSystem
         //A more descriptive name for a potentially nondescriptive waypoint names
         [DisplayWithoutEdit()]
         public string hashname = "";
+        public int WaypointID;
         public float neighborSearchRadius = 10f;
         public bool showNeighborRadius = false;
         public bool showNeighborConenction = false;
-        //Waypoints and weights to get to them
-        public Dictionary<Waypoint, NeighborConnection> neighbors = new Dictionary<Waypoint, NeighborConnection>();
+        //A dictionary of waypoints sorted by waypointID
+        //Unneccessary and nonfunctional in certain cases
+        //public Dictionary<int, NeighborConnection> neighbors = new Dictionary<int, NeighborConnection>();
         [SerializeField]
-        private List<NeighborConnection> InspectorNeighbors = new List<NeighborConnection>();
+        public List<NeighborConnection> neighbors = new List<NeighborConnection>();
 
-        //Is called once by the system when the instance of the script is first loaded
-        private void Awake()
+
+        private void Start()
         {
             hashname = this.name + this.GetHashCode();
 
@@ -40,22 +40,72 @@ namespace TankPathingSystem
         public void FindNeighbors()
         {
             Debug.Log("Waypoint " + this.hashname + " has begun looking for nearby neighbors");
-            Collider[] nearbyObjects = Physics.OverlapSphere(this.transform.position, neighborSearchRadius, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Collide);
-
-            foreach(Collider obj in nearbyObjects)
+            Collider[] potentialNearbyObjects = Physics.OverlapSphere(this.transform.position, neighborSearchRadius, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Collide);
+            List<Collider> nearbyObjects = new List<Collider>();
+            this.gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
+            foreach (Collider c in potentialNearbyObjects)
             {
-                Debug.Log("Potential neighbor detected");
-                Waypoint neighbor;
-                if (obj.gameObject != this.gameObject && obj.TryGetComponent<Waypoint>(out neighbor) && !neighbors.ContainsKey(neighbor))
+                RaycastHit hit;
+                if(Physics.Raycast(this.transform.position, c.transform.position - this.transform.position, out hit, neighborSearchRadius, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Collide))
                 {
-                    Debug.Log("Neighbor confirmed. Adding neighbor " + neighbor.hashname);
-                    NeighborConnection connection = new NeighborConnection(neighbor);
-                    connection.weight = Vector3.Distance(this.transform.position, neighbor.transform.position);
-                    connection.neighborName = neighbor.hashname;
-                    neighbors.Add(neighbor, connection);
-                    InspectorNeighbors.Add(connection);
+                    if (hit.collider == c)
+                    {
+                        Debug.Log("Raycast to collider " + c.name + " succesful; collider visible.");
+                        nearbyObjects.Add(c);
+                    }
+                    else
+                    {
+                        Debug.Log("Raycast to collider " + c.name + " failed; cannot make conneciton.");
+                    }
                 }
             }
+            this.gameObject.layer = LayerMask.NameToLayer("Default");
+
+            for (int i = 0; i < nearbyObjects.Count; i++)
+            {
+                Debug.Log("Potential neighbor " + nearbyObjects[i].name + nearbyObjects[i].GetHashCode() + " detected");
+                Waypoint neighbor;
+                if (nearbyObjects[i].gameObject != this.gameObject &&
+                    nearbyObjects[i].TryGetComponent<Waypoint>(out neighbor) &&
+                    (!neighbor.CompareTag("Offduty Area") && !neighbor.CompareTag("Repair Area"))
+                    )
+                {
+                    Debug.Log("Neighbor confirmed. Adding neighbor " + neighbor.hashname + " ID " + neighbor.WaypointID);
+                    NeighborConnection connection = new NeighborConnection(neighbor);
+                    connection.disttoneighbor = Vector3.Distance(this.transform.position, neighbor.transform.position);
+                    AddNeighborUnique(connection);
+                    Debug.Log("Adding self as neighbor to the possibly new neighbor.");
+                    NeighborConnection connectionBack = new NeighborConnection(this);
+                    connectionBack.disttoneighbor = connection.disttoneighbor;
+                    neighbor.AddNeighborUnique(connectionBack);
+                }
+                else
+                    Debug.Log("Neighbor rejected");
+            }
+        }
+
+        public void AddNeighborUnique(NeighborConnection neighbor)
+        {
+            bool contains = false;
+            foreach(NeighborConnection addedneighbor in neighbors)
+            {
+                if (addedneighbor.neighborID == neighbor.neighborID)
+                {
+                    contains = true;
+                    break;
+                }
+            }
+
+
+            Debug.Log("Checking uniqueness for " + neighbor.neighborName);
+            if (!contains)
+            {
+                Debug.Log("Neighbor has not been added yet, adding");
+                //this.neighbors.Add(neighbor.neighborID, neighbor);
+                this.neighbors.Add(neighbor);
+            }
+            else
+                Debug.Log("Neighbor has already been added. Doing nothing");
         }
 
         /// <summary>
@@ -63,9 +113,11 @@ namespace TankPathingSystem
         /// </summary>
         public void RecalculateWeights()
         {
-            foreach(NeighborConnection connection in neighbors.Values)
+            Debug.Log("Recalculating weights");
+            for (int i = 0; i < neighbors.Count; i++)
             {
-                connection.weight = Vector3.Distance(this.transform.position, connection.neighbor.transform.position);
+                neighbors[i].disttoneighbor = Vector3.Distance(this.transform.position, neighbors[i].neighbor.transform.position);
+                //neighbors[InspectorNeighbors[i].neighborID].disttoneighbor = InspectorNeighbors[i].disttoneighbor;
             }
         }
 
@@ -74,8 +126,8 @@ namespace TankPathingSystem
         ///</summary>
         public void ResetNeighbors()
         {
-            neighbors = new Dictionary<Waypoint, NeighborConnection>();
-            InspectorNeighbors.Clear();
+            //neighbors = new Dictionary<int, NeighborConnection>();
+            neighbors.Clear();
         }
 
         private void OnDrawGizmos()
@@ -85,12 +137,12 @@ namespace TankPathingSystem
                 Gizmos.color = Color.white;
                 Gizmos.DrawWireSphere(this.transform.position, neighborSearchRadius);
             }
-            if (showNeighborConenction && InspectorNeighbors != null)
+            if (showNeighborConenction && neighbors != null)
             {
-                foreach(NeighborConnection n in InspectorNeighbors)
+                foreach(NeighborConnection n in neighbors)
                 {
                     Vector3 pos = this.transform.position;
-                    Gizmos.color = new Color(pos.x, pos.y,pos.z);
+                    Gizmos.color = new Color(pos.x, pos.y, pos.z);
                     Gizmos.DrawLine(pos, n.neighbor.transform.position);
                 }
             }
@@ -100,21 +152,22 @@ namespace TankPathingSystem
     [Serializable]
     public class NeighborConnection
     {
-        private Waypoint _neighbor;
-        public Waypoint neighbor { get { return _neighbor; } }
+        public int neighborID;
+        public Waypoint neighbor;
+        public string neighborName;
         [DisplayWithoutEdit()]
-        public string neighborName = "uninitialized name";
-        [DisplayWithoutEdit()]
-        public float weight;
-        public NeighborConnection(Waypoint neighbor, float weight = float.PositiveInfinity)
+        public float disttoneighbor;
+        public NeighborConnection(Waypoint neighbor, float dist = float.PositiveInfinity)
         {
-            _neighbor = neighbor;
-            this.weight = weight;
+            this.neighbor = neighbor;
+            neighborID = neighbor.WaypointID;
+            neighborName = neighbor.hashname;
+            this.disttoneighbor = dist;
         }
 
         public override int GetHashCode()
         {
-            return _neighbor.GetHashCode();
+            return neighborID.GetHashCode();
         }
     }
 
