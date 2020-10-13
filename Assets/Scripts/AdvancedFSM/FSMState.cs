@@ -23,6 +23,7 @@ public abstract class FSMState
     protected FSMStateID stateID;
     public FSMStateID ID { get { return stateID; } }
     public Waypoint destination; //Optional ability to cache final destinations for states such as offduty and repair
+    public Vector3 destPos;
     public NPCTankController tank; //Only public for the Gizmodrawer to see, otherwise should be protected //Same as above
     protected Waypoint nextWaypoint;
     protected float waitTimer;
@@ -48,7 +49,7 @@ public abstract class FSMState
         }
 
         map.Add(transition, id);
-        Debug.Log("Added : " + transition + " with ID : " + id);
+        //Debug.Log("Added : " + transition + " with ID : " + id);
     }
 
     /// <summary>
@@ -122,14 +123,19 @@ public abstract class FSMState
     //    destPos = waypoints[rndIndex].position + rndPosition;
     //}
 
-    protected void MoveStraightTowards(Transform moveable, Transform target)
+    protected void MoveStraightTowards(Transform moveable, Vector3 target)
     {
         //2. Rotate to the target point
-        Quaternion targetRotation = Quaternion.LookRotation(target.position - moveable.position);
+        Quaternion targetRotation = Quaternion.LookRotation(target - moveable.position);
         moveable.rotation = Quaternion.Slerp(moveable.rotation, targetRotation, Time.deltaTime * curRotSpeed);
 
         //3. Go Forward
         moveable.Translate(Vector3.forward * Time.deltaTime * curSpeed);
+    }
+    protected void RotateTurretTowards(Transform turret, Vector3 target)
+    {
+        Quaternion turretRotation = Quaternion.LookRotation(target - turret.position);
+        turret.rotation = Quaternion.Slerp(turret.rotation, turretRotation, Time.deltaTime * 20); //magic number const I know
     }
 
     /// <summary>

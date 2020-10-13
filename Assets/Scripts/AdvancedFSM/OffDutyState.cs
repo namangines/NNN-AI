@@ -22,11 +22,21 @@ public class OffDutyState : FSMState
         Collider playerc = player.GetComponent<Collider>();
         if (tank.IsInsideSightFrustrum(playerc) && tank.HasLineOfSight(playerc))
         {
-            tank.SetTransition(Transition.SawPlayer);
-            tank.destPath = null;
+            if (TankDutyManager.Instance.GetChanceToHide() > Random.Range(0, 1.0f))
+            {
+                waitTimer = 0;
+                tank.SetTransition(Transition.WantsToHide);
+                tank.destPath = null;
+            }
+            else
+            {
+                waitTimer = 0;
+                tank.SetTransition(Transition.SawPlayer);
+                tank.destPath = null;
+            }
         }
 
-        if(waitTimer <= 0)
+        if (waitTimer <= 0)
         {
             Debug.Log("Transition from offduty to patrol");
             TankDutyManager.Instance.returnToDuty(this.tank);
@@ -46,8 +56,8 @@ public class OffDutyState : FSMState
         else if (nextWaypoint == null)
             nextWaypoint = tank.destPath.Pop();
 
-        float arbitrarydisttopoint = 75f; 
-        
+        float arbitrarydisttopoint = 75f;
+
         if (Vector3.Distance(npc.position, destination.transform.position) < arbitrarydisttopoint) //if final patrolpoint reached;
         {
             tank.timeSinceOffduty = 0;
@@ -61,7 +71,7 @@ public class OffDutyState : FSMState
         else if (Vector3.Distance(npc.position, nextWaypoint.transform.position) > arbitrarydisttopoint)
         {
             tank.ChangeLightColor(Color.green);
-            MoveStraightTowards(npc, nextWaypoint.transform);
+            MoveStraightTowards(npc, nextWaypoint.transform.position);
             Quaternion turretRotation = Quaternion.LookRotation(nextWaypoint.transform.position - tank.turret.position);
             tank.turret.rotation = Quaternion.Slerp(tank.turret.rotation, turretRotation, Time.deltaTime * curRotSpeed);
             //FSMGizmoDrawer.DrawLine(npc.position, nextWaypoint.transform.position, Color.blue);

@@ -64,7 +64,7 @@ public class PlayerTankController : MonoBehaviour
         Ray RayCast = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         // Determine the point where the cursor ray intersects the plane.
-        float HitDist = 0;
+        float HitDist;
 
         // If the ray is parallel to the plane, Raycast will return false.
         if (playerPlane.Raycast(RayCast, out HitDist))

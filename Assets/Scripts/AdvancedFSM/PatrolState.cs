@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 using TankPathingSystem;
-using System;
 
 public class PatrolState : FSMState
 {
@@ -21,9 +20,19 @@ public class PatrolState : FSMState
         Collider playerc = player.GetComponent<Collider>();
         if (tank.IsInsideSightFrustrum(playerc) && tank.HasLineOfSight(playerc))
         {
-            //2. if so, switch to the chase state
-            Debug.Log("Switch to Chase State");
-            tank.SetTransition(Transition.SawPlayer);
+            if (TankDutyManager.Instance.GetChanceToHide() > Random.Range(0, 1.0f))
+            {
+                waitTimer = 0f;
+                tank.destPath = null;
+                Debug.Log("Switch to Hiding State");
+                tank.SetTransition(Transition.WantsToHide);
+            }
+            else
+            {
+                Debug.Log("Switch to Chase State");
+                waitTimer = 0;
+                tank.SetTransition(Transition.SawPlayer);
+            }
         }
 
         float secondstilloffduty = 15f;
@@ -87,7 +96,7 @@ public class PatrolState : FSMState
         else if (Vector3.Distance(npc.position, nextWaypoint.transform.position) > arbitrarydisttopoint)
         {
             tank.ChangeLightColor(Color.blue);
-            MoveStraightTowards(npc, nextWaypoint.transform);
+            MoveStraightTowards(npc, nextWaypoint.transform.position);
             Quaternion turretRotation = Quaternion.LookRotation(tank.transform.forward, tank.turret.transform.up);
             tank.turret.rotation = Quaternion.Slerp(tank.turret.rotation, turretRotation, Time.deltaTime * curRotSpeed);
         }

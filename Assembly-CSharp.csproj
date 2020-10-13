@@ -80,6 +80,7 @@
     <Compile Include="Assets\Scripts\AdvancedFSM\FSM.cs" />
     <Compile Include="Assets\Scripts\AdvancedFSM\FSMGizmoDrawer.cs" />
     <Compile Include="Assets\Scripts\AdvancedFSM\FSMState.cs" />
+    <Compile Include="Assets\Scripts\AdvancedFSM\HideState.cs" />
     <Compile Include="Assets\Scripts\AdvancedFSM\NPCTankController.cs" />
     <Compile Include="Assets\Scripts\AdvancedFSM\OffDutyState.cs" />
     <Compile Include="Assets\Scripts\AdvancedFSM\PatrolState.cs" />

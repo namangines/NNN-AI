@@ -26,7 +26,6 @@ namespace TankPathingSystem
             Waypoint random;
             do
             {
-                Debug.Log("Randomwaypointloop");
                 random = allWaypoints[Random.Range(0, allWaypoints.Count)];
             }
             while (random.WaypointID == exclude.WaypointID || random.CompareTag("Offduty Area") || random.CompareTag("Repair Area"));
@@ -100,10 +99,14 @@ namespace TankPathingSystem
             }
         }
 
+        public Stack<Waypoint> Path(Vector3 start, Vector3 end)
+        {
+            return Path(GetClosestWaypoint(start), GetClosestWaypoint(end));
+        }
         public Stack<Waypoint> Path(Waypoint start, Waypoint end)
         {
             FastPriorityQueue<WaypointQueueable> queue = new FastPriorityQueue<WaypointQueueable>(128);
-            Debug.Log("Starting path algorithm from " + start.hashname + " to " + end.hashname);
+            //Debug.Log("Starting path algorithm from " + start.hashname + " to " + end.hashname);
             //Debug.Log("Enqueue start of " + start.hashname);
             enqueue(queue, start);
             List<int> alreadyAddedWaypoints = new List<int>();
@@ -202,7 +205,7 @@ namespace TankPathingSystem
                 }
 
                 stack.Push(start);
-                Debug.Log("Path found. Returning path " + stack.ToArray().ToString());
+                //Debug.Log("Path found. Returning path " + stack.ToArray());
                 queue.Clear();
                 alreadyAddedWaypoints.Clear();
                 return stack;

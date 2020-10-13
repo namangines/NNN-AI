@@ -18,6 +18,9 @@ public class TankMonitor : MonoBehaviour
 
     private void Update()
     {
-        text.text = tank.name + tank.GetHashCode() + " : Health : " + tank.health;
+        if (tank != null)
+            text.text = tank.name + tank.GetHashCode() + " : Health : " + tank.health;
+        else
+            text.text = "DEAD";
     }
 }

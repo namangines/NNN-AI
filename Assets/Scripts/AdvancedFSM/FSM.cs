@@ -7,8 +7,8 @@ public class FSM : MonoBehaviour
     //Player Transform
     protected Transform playerTransform;
 
-    //For pathing purposes we keep this here cuz reasons?!?
-    //public Waypoint destWaypoint;
+    //For cases where we are going somewhere
+    public Vector3 destPos;
     //The path that must be taken to get to the current state's desination from current position
     public Stack<Waypoint> destPath;
 

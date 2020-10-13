@@ -4,15 +4,20 @@ using TankPathingSystem;
 
 public class NPCTankController : AdvancedFSM
 {
-    //public Waypoint destWaypoint;
-    //public Stack<Waypoint> destPath = new Stack<Waypoint>();
+    public List<string> TankClasses;
+
     public GameObject Bullet;
+    public GameObject fastBullet;
+
     public Light Sightlight;
     public Camera Sight;
     public Transform SightPoint;
 
+    public Light AuraLight;
+
     public int health;
     public float timeSinceOffduty = 0.0f;
+    public bool remainHidden = true;
 
     // We overwrite the deprecated built-in `rigidbody` variable.
     new private Rigidbody rigidbody;
@@ -41,6 +46,9 @@ public class NPCTankController : AdvancedFSM
 
         //Start Doing the Finite State Machine
         ConstructFSM();
+
+        if (remainHidden)
+            SetTransition(Transition.WantsToHide);
     }
 
     //Update each frame
@@ -71,6 +79,7 @@ public class NPCTankController : AdvancedFSM
         patrol.AddTransition(Transition.GotBored, FSMStateID.Bored);
         patrol.AddTransition(Transition.WantsTimeOff, FSMStateID.OffDuty);
         patrol.AddTransition(Transition.Hurt, FSMStateID.Repairing);
+        patrol.AddTransition(Transition.WantsToHide, FSMStateID.Hiding);
 
         ChaseState chase = new ChaseState(this);
         chase.AddTransition(Transition.LostPlayer, FSMStateID.Patrolling);
@@ -88,10 +97,15 @@ public class NPCTankController : AdvancedFSM
         offduty.AddTransition(Transition.SawPlayer, FSMStateID.Chasing);
         offduty.AddTransition(Transition.RestedLongEnough, FSMStateID.Patrolling);
         offduty.AddTransition(Transition.NoHealth, FSMStateID.Dead);
+        offduty.AddTransition(Transition.WantsToHide, FSMStateID.Hiding);
 
         RepairState repair = new RepairState(this);
         repair.AddTransition(Transition.Healed, FSMStateID.Patrolling);
         repair.AddTransition(Transition.NoHealth, FSMStateID.Dead);
+
+        HideState hide = new HideState(this);
+        hide.AddTransition(Transition.ReachPlayer, FSMStateID.Attacking);
+        hide.AddTransition(Transition.RestedLongEnough, FSMStateID.Patrolling);
 
         DeadState dead = new DeadState();
         dead.AddTransition(Transition.NoHealth, FSMStateID.Dead);
@@ -102,6 +116,7 @@ public class NPCTankController : AdvancedFSM
         AddFSMState(attack);
         AddFSMState(offduty);
         AddFSMState(repair);
+        AddFSMState(hide);
         AddFSMState(dead);
     }
 
@@ -114,13 +129,18 @@ public class NPCTankController : AdvancedFSM
         //Reduce health
         if (collision.gameObject.tag == "Bullet")
         {
-            health -= collision.gameObject.GetComponent<Bullet>().damage; ;
+            health -= collision.gameObject.GetComponent<Bullet>().damage;
 
             if (health <= 0)
             {
                 Debug.Log("Switch to Dead State");
                 SetTransition(Transition.NoHealth);
+                TankDutyManager.Instance.TankHasDied(this);
                 Explode();
+            }
+            else
+            {
+                SetTransition(Transition.SawPlayer); //If they've been hit they shouldn't just sit and take it
             }
         }
     }
@@ -139,20 +159,55 @@ public class NPCTankController : AdvancedFSM
     }
 
     /// <summary>
-    /// Shoot the bullet from the turret
+    /// Shoots a bullet. Has a chance to shoot 'fast' 
     /// </summary>
     public void ShootBullet()
     {
         if (elapsedTime >= shootRate)
         {
-            Instantiate(Bullet, bulletSpawnPoint.position, bulletSpawnPoint.rotation).GetComponent<Bullet>().LifeTime = 4f;
-            elapsedTime = 0.0f;
+            //These could be inspector values but for now I just put the chance here
+            float odds = .15f;
+
+            if (TankClasses.Contains("Fast"))
+                odds = .85f;
+
+            if (Random.value < odds)
+                shootFast();
+            else
+                shootNormal();
         }
+    }
+    private void shootNormal()
+    {
+        Debug.Log("Shoot normal");
+        Instantiate(Bullet, bulletSpawnPoint.position, bulletSpawnPoint.rotation).GetComponent<Bullet>().LifeTime = 4f;
+        elapsedTime = 0.0f;
+    }
+    private void shootFast()
+    {
+        Debug.Log("Shoot fast");
+        Instantiate(fastBullet, bulletSpawnPoint.position, bulletSpawnPoint.rotation).GetComponent<Bullet>().LifeTime = 4f;
+        Quaternion angle = Quaternion.AngleAxis(5, Vector3.up);
+        Instantiate(fastBullet, bulletSpawnPoint.position, angle * bulletSpawnPoint.rotation).GetComponent<Bullet>().LifeTime = 4f;
+        angle = Quaternion.AngleAxis(-5, Vector3.up);
+        Instantiate(fastBullet, bulletSpawnPoint.position, angle * bulletSpawnPoint.rotation).GetComponent<Bullet>().LifeTime = 4f;
+        elapsedTime = 0.25f; //So the next shot is even faster
     }
 
     public void ChangeLightColor(Color color)
     {
         Sightlight.color = color;
+    }
+
+    public void LightOff()
+    {
+        Sightlight.enabled = false;
+        AuraLight.enabled = false;
+    }
+    public void LightOn()
+    {
+        Sightlight.enabled = true;
+        AuraLight.enabled = true;
     }
 
     public bool IsInsideSightFrustrum(Collider collider)
@@ -164,14 +219,42 @@ public class NPCTankController : AdvancedFSM
     public bool HasLineOfSight(Collider target)
     {
         RaycastHit hit;
-        if (Physics.Raycast(SightPoint.position, target.transform.position - SightPoint.position, out hit, Sight.farClipPlane, LayerMask.GetMask("Default"), QueryTriggerInteraction.UseGlobal))
+        if (Physics.Raycast(SightPoint.position, target.transform.position - SightPoint.position, out hit, Sight.farClipPlane, Physics.DefaultRaycastLayers, QueryTriggerInteraction.UseGlobal))
         {
             if(target == hit.collider)
             {
                 return true;
             }
         }
-
         return false;
+    }
+    public bool HasLineOfSight(Transform target)
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(SightPoint.position, target.position - SightPoint.position, out hit, Sight.farClipPlane, Physics.DefaultRaycastLayers, QueryTriggerInteraction.UseGlobal))
+        {
+            if (target == hit.transform)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    /// <summary>
+    /// Works slightly differently to the others: instead of checking if you hit a provided target, this checks to see if you can reach the position or not without hitting another object aside from 'exclude'
+    /// </summary>
+    /// <param name="exclude">The transform to exclude from the raycast search: usually the target or something close to the target: ie, finding out if the last known vector3 position of the player is within sight</param>s
+    public bool HasLineOfSight(Vector3 target, Transform exclude = null)
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(SightPoint.position, target - SightPoint.position, out hit, Sight.farClipPlane, Physics.DefaultRaycastLayers, QueryTriggerInteraction.UseGlobal))
+        {
+            if (hit.transform != exclude)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

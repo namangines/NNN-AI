@@ -46,7 +46,7 @@ namespace TankPathingSystem
             foreach (Collider c in potentialNearbyObjects)
             {
                 RaycastHit hit;
-                if(Physics.Raycast(this.transform.position, c.transform.position - this.transform.position, out hit, neighborSearchRadius, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Collide))
+                if(Physics.Raycast(this.transform.position, c.transform.position - this.transform.position, out hit, neighborSearchRadius, LayerMask.GetMask("Default"), QueryTriggerInteraction.Collide))
                 {
                     if (hit.collider == c)
                     {

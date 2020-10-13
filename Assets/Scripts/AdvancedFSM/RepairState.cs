@@ -7,8 +7,8 @@ public class RepairState : FSMState
 {
     public RepairState(NPCTankController tank)
     {
-        curRotSpeed = 10;
-        curSpeed = 220;
+        curRotSpeed = 12;
+        curSpeed = 250;
         stateID = FSMStateID.Repairing;
         this.tank = tank;
         Transform repairarea = GameObject.FindGameObjectWithTag("Repair Area").transform;
@@ -48,7 +48,7 @@ public class RepairState : FSMState
         else if (Vector3.Distance(npc.position, nextWaypoint.transform.position) > 75f)
         {
             tank.ChangeLightColor(Color.yellow);
-            MoveStraightTowards(npc, nextWaypoint.transform);
+            MoveStraightTowards(npc, nextWaypoint.transform.position);
             Quaternion turretRotation = Quaternion.LookRotation(tank.transform.forward, tank.turret.transform.up);
             tank.turret.rotation = Quaternion.Slerp(tank.turret.rotation, turretRotation, Time.deltaTime * curRotSpeed);
         }

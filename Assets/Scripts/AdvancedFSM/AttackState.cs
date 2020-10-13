@@ -3,11 +3,13 @@ using System.Collections;
 
 public class AttackState : FSMState
 {
+    const float lastSeenTimer = 3f;
+
     public AttackState(NPCTankController tank)
     {
         stateID = FSMStateID.Attacking;
-        curRotSpeed = 1.0f;
-        curSpeed = 150.0f;
+        curRotSpeed = 1.5f;
+        curSpeed = 100.0f;
         this.tank = tank;
     }
 
@@ -15,18 +17,26 @@ public class AttackState : FSMState
     {
         //Check the distance with the player tank
         float dist = Vector3.Distance(npc.position, player.position);
-        if (dist >= tank.Sight.farClipPlane / 1.5)
-        {
 
+        //If it's close enough to see, yet too far to attack, switch to chase. Alternatively, always switch to chase if line of sight is obstructed
+        Collider playerc = player.GetComponent<Collider>();
+        if (dist >= tank.Sight.farClipPlane / 1.5f || !tank.HasLineOfSight(playerc))
+        {
             Debug.Log("Switch to Chase State");
             tank.SetTransition(Transition.SawPlayer);
         }
+
         //Transition to patrol is the tank become too far
         else if (dist >= tank.Sight.farClipPlane)
         {
             Debug.Log("Switch to Patrol State");
+            tank.destPath = null;
             tank.SetTransition(Transition.LostPlayer);
         }
+
+        
+
+        //regardless of all, transition to repair if hurt
         if(tank.health <= 10)
         {
             tank.destPath = null;
@@ -39,7 +49,7 @@ public class AttackState : FSMState
     {
         float dist = Vector3.Distance(npc.position, player.position);
         if (dist >= tank.Sight.farClipPlane / 4)
-            MoveStraightTowards(npc, player);
+            MoveStraightTowards(npc, player.position);
 
         //Set the target position as the player position
         Vector3 destPos = player.position;

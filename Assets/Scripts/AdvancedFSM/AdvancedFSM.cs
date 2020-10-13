@@ -22,6 +22,7 @@ public enum Transition
     Hurt,
     RestedLongEnough,
     Healed,
+    WantsToHide,
 }
 
 public enum FSMStateID
@@ -33,7 +34,8 @@ public enum FSMStateID
     OffDuty,
     Repairing,
     Bored,
-    Dead
+    Dead,
+    Hiding
 }
 
 public class AdvancedFSM : FSM 
@@ -85,7 +87,7 @@ public class AdvancedFSM : FSM
 
         //If no state in the current then add the state to the list
         fsmStates.Add(fsmState);
-        Debug.Log("FSM: Added state " + fsmState.ID);
+        //Debug.Log("FSM: Added state " + fsmState.ID);
     }
 
     /// <summary>
@@ -121,7 +123,7 @@ public class AdvancedFSM : FSM
     /// </summary>
     public void PerformTransition(Transition trans)
     {
-        Debug.Log("Transitioning between states");
+        //Debug.Log("Transitioning between states");
         // Check for NullTransition before changing the current state
         if (trans == Transition.None)
         {
