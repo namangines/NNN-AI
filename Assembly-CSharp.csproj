@@ -88,6 +88,7 @@
     <Compile Include="Assets\Scripts\Misc\AutoDestruct.cs" />
     <Compile Include="Assets\Scripts\Misc\Bullet.cs" />
     <Compile Include="Assets\Scripts\Misc\DetectForEvents.cs" />
+    <Compile Include="Assets\Scripts\Misc\EventManagerDel.cs" />
     <Compile Include="Assets\Scripts\Misc\GameManager.cs" />
     <Compile Include="Assets\Scripts\Misc\PlayerTankController.cs" />
     <Compile Include="Assets\Scripts\Misc\SoundDetect.cs" />
