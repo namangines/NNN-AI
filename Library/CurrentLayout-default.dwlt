@@ -140,7 +140,7 @@ MonoBehaviour:
   m_MinSize: {x: 403, y: 492}
   m_MaxSize: {x: 10001, y: 14042}
   vertical: 1
-  controlID: 49
+  controlID: 94
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -165,7 +165,7 @@ MonoBehaviour:
   m_MinSize: {x: 403, y: 221}
   m_MaxSize: {x: 8003, y: 4021}
   vertical: 0
-  controlID: 115
+  controlID: 68
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -185,8 +185,8 @@ MonoBehaviour:
     y: 0
     width: 323
     height: 456
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 201, y: 221}
+  m_MaxSize: {x: 4001, y: 4021}
   m_ActualView: {fileID: 13}
   m_Panes:
   - {fileID: 13}
@@ -295,10 +295,10 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 208
-    y: 80.8
-    width: 937
-    height: 487
+    x: 323.2
+    y: 73.6
+    width: 764
+    height: 435
   m_ViewDataDictionary: {fileID: 0}
   m_SerializedViewNames: []
   m_SerializedViewValues: []
@@ -308,7 +308,7 @@ MonoBehaviour:
   m_ShowGizmos: 0
   m_TargetDisplay: 0
   m_ClearColor: {r: 0, g: 0, b: 0, a: 0}
-  m_TargetSize: {x: 937, y: 466}
+  m_TargetSize: {x: 764, y: 414}
   m_TextureFilterMode: 0
   m_TextureHideFlags: 61
   m_RenderIMGUI: 1
@@ -323,10 +323,10 @@ MonoBehaviour:
     m_VRangeLocked: 0
     hZoomLockedByDefault: 0
     vZoomLockedByDefault: 0
-    m_HBaseRangeMin: -374.80002
-    m_HBaseRangeMax: 374.80002
-    m_VBaseRangeMin: -186.40001
-    m_VBaseRangeMax: 186.40001
+    m_HBaseRangeMin: -305.6
+    m_HBaseRangeMax: 305.6
+    m_VBaseRangeMin: -165.6
+    m_VBaseRangeMax: 165.6
     m_HAllowExceedBaseRangeMin: 1
     m_HAllowExceedBaseRangeMax: 1
     m_VAllowExceedBaseRangeMin: 1
@@ -344,23 +344,23 @@ MonoBehaviour:
       serializedVersion: 2
       x: 0
       y: 21
-      width: 937
-      height: 466
-    m_Scale: {x: 1, y: 1}
-    m_Translation: {x: 468.5, y: 233}
+      width: 764
+      height: 414
+    m_Scale: {x: 1.1559031, y: 1.1559031}
+    m_Translation: {x: 382, y: 207}
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
-      x: -468.5
-      y: -233
-      width: 937
-      height: 466
+      x: -330.47754
+      y: -179.08075
+      width: 660.9551
+      height: 358.1615
     m_MinimalGUI: 1
   m_defaultScale: 1
-  m_LastWindowPixelSize: {x: 1171.25, y: 608.75}
+  m_LastWindowPixelSize: {x: 955, y: 543.75}
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1
   m_LowResolutionForAspectRatios: 01000000000000000000
@@ -395,9 +395,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: f6450000
+      m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 6afbffff
+      m_ExpandedIDs: 6afbffff9a3b00002a3d00008e3e0000da420000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -457,9 +457,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -1438.9518, y: -20.32753, z: -1120.4481}
+    m_Target: {x: 0.00061035156, y: 0, z: -0.00024414062}
     speed: 2
-    m_Value: {x: -1438.9518, y: -20.32753, z: -1120.4481}
+    m_Value: {x: 0.00061035156, y: 0, z: -0.00024414062}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -505,13 +505,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: -0.04864326, y: -0.9081541, z: 0.40075985, w: -0.112009756}
+    m_Target: {x: -0.08014909, y: 0.89432126, z: -0.4037723, w: -0.17610675}
     speed: 2
-    m_Value: {x: -0.048636824, y: -0.9080339, z: 0.40070683, w: -0.11199494}
+    m_Value: {x: -0.08013788, y: 0.8941961, z: -0.4037158, w: -0.1760821}
   m_Size:
-    m_Target: 597.0116
+    m_Target: 962.0898
     speed: 2
-    m_Value: 597.0116
+    m_Value: 962.0898
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -665,20 +665,20 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scripts/Misc
+    - Assets/resources/Materials
   m_ViewMode: 1
   m_StartGridSize: 63
   m_LastFolders:
-  - Assets/Scripts/Misc
+  - Assets/resources/Materials
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\nmang\Documents\GitHub\NNN-AI
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 138}
-    m_SelectedIDs: e4450000
-    m_LastClickedID: 17892
-    m_ExpandedIDs: 00000000bc450000be450000c0450000c2450000c4450000c6450000c845000000ca9a3b
+    m_SelectedIDs: ea450000
+    m_LastClickedID: 17898
+    m_ExpandedIDs: 00000000c6450000c8450000ca450000cc450000ce450000d0450000d245000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -706,7 +706,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000bc450000be450000c0450000c2450000c4450000c6450000c8450000
+    m_ExpandedIDs: 00000000c6450000c8450000ca450000cc450000ce450000d0450000d2450000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 

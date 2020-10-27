@@ -7,6 +7,8 @@ using UnityEngine.Events;
 public class DetectForEvents : MonoBehaviour
 {
 
+    public GameObject cube;
+
     void OnEnable()
     {
         EventManagerDel.StartListening("Sound Detected", playerHeard);
@@ -21,6 +23,8 @@ public class DetectForEvents : MonoBehaviour
     {
         //function to run when sound is heard
         Debug.Log("Player was heard");
+        var alarm = cube.GetComponent<Renderer>();
+        alarm.material.SetColor("_Color", Color.red);
     }
 
 }
