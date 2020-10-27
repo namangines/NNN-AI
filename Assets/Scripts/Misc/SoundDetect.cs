@@ -5,6 +5,9 @@ using UnityEngine.Events;
 
 public class SoundDetect : MonoBehaviour
 {
+
+    public GameObject cube;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,5 +23,6 @@ public class SoundDetect : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         EventManagerDel.TriggerEvent("Sound Detected");
+        
     }
 }
