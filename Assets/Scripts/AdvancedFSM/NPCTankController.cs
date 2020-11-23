@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using TankPathingSystem;
+using UnityEngine.AI;
 
 public class NPCTankController : AdvancedFSM
 {
@@ -22,6 +23,8 @@ public class NPCTankController : AdvancedFSM
     // We overwrite the deprecated built-in `rigidbody` variable.
     new private Rigidbody rigidbody;
 
+    private NavMeshAgent navAgent;
+
     //Initialize the Finite state machine for the NPC tank
     protected override void Initialize()
     {
@@ -34,8 +37,9 @@ public class NPCTankController : AdvancedFSM
         GameObject objPlayer = GameObject.FindGameObjectWithTag("Player");
         playerTransform = objPlayer.transform;
 
-        //Get the rigidbody
-        rigidbody = GetComponent<Rigidbody>();
+        //Get the rigidbody and nav mesh agent attached to this instance of tank NPC
+        rigidbody = this.GetComponent<Rigidbody>();
+        navAgent = this.GetComponent<NavMeshAgent>();
 
         if (!playerTransform)
             print("Player doesn't exist.. Please add one with Tag named 'Player'");
@@ -43,6 +47,18 @@ public class NPCTankController : AdvancedFSM
         //Get the turret of the tank
         turret = gameObject.transform.GetChild(0).transform;
         bulletSpawnPoint = turret.GetChild(0).transform;
+
+        //Register listeners
+        if (TankClasses.Contains("Normal"))
+        {
+            EventManagerDel.StartListening("Sound Detected",
+                delegate
+                {
+                    SetTransition(Transition.SawPlayer);
+                }
+            );
+        }
+
 
         //Start Doing the Finite State Machine
         ConstructFSM();
@@ -127,7 +143,7 @@ public class NPCTankController : AdvancedFSM
     void OnTriggerEnter(Collider collision)
     {
         //Reduce health
-        if (collision.gameObject.tag == "Bullet")
+        if (collision.gameObject.CompareTag("Bullet"))
         {
             health -= collision.gameObject.GetComponent<Bullet>().damage;
 
@@ -142,6 +158,13 @@ public class NPCTankController : AdvancedFSM
             {
                 SetTransition(Transition.SawPlayer); //If they've been hit they shouldn't just sit and take it
             }
+        }
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            SetTransition(Transition.SawPlayer);
         }
     }
 
@@ -197,17 +220,37 @@ public class NPCTankController : AdvancedFSM
     public void ChangeLightColor(Color color)
     {
         Sightlight.color = color;
+        if (TankClasses.Contains("Normal"))
+        {
+            AuraLight.color = color;
+        }
     }
 
-    public void LightOff()
+    public void AllLightOn()
     {
-        Sightlight.enabled = false;
-        AuraLight.enabled = false;
+        SightLightOn();
+        AuraLightOn();
     }
-    public void LightOn()
+    public void AllLightOff()
+    {
+        SightLightOff();
+        AuraLightOff();
+    }
+    public void SightLightOn()
     {
         Sightlight.enabled = true;
+    }
+    public void SightLightOff()
+    {
+        Sightlight.enabled = false;
+    }
+    public void AuraLightOn()
+    {
         AuraLight.enabled = true;
+    }
+    public void AuraLightOff()
+    {
+        AuraLight.enabled = false;
     }
 
     public bool IsInsideSightFrustrum(Collider collider)
@@ -256,5 +299,18 @@ public class NPCTankController : AdvancedFSM
         }
 
         return true;
+    }
+
+    /// <summary>
+    /// Navigates using the NavMesh system
+    /// </summary>
+    /// <param name="position"></param>
+    public void NavigateToPosition(Vector3 position)
+    {
+        navAgent.destination = position;
+    }
+    public void NavigateToPosition(Transform transform)
+    {
+        NavigateToPosition(transform.position);
     }
 }

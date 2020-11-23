@@ -17,7 +17,7 @@ public class RepairState : FSMState
 
     public override void Act(Transform player, Transform npc)
     {
-        if(tank.health >= 100)
+        if (tank.health >= 100)
         {
             tank.destPath = null;
             tank.SetTransition(Transition.Healed);
@@ -26,14 +26,7 @@ public class RepairState : FSMState
 
     public override void Reason(Transform player, Transform npc)
     {
-        if (tank.destPath == null)
-        {
-            WaypointManager manager = WaypointManager.Instance;
-            tank.destPath = manager.Path(manager.GetClosestWaypoint(npc.position), destination);
-            nextWaypoint = tank.destPath.Pop();
-        }
-        else if (nextWaypoint == null)
-            nextWaypoint = tank.destPath.Pop();
+        tank.NavigateToPosition(destination.transform);
 
         if (Vector3.Distance(npc.position, destination.transform.position) < 75f) //if final patrolpoint reached;
         {
@@ -45,16 +38,9 @@ public class RepairState : FSMState
             }
 
         }
-        else if (Vector3.Distance(npc.position, nextWaypoint.transform.position) > 75f)
+        else
         {
             tank.ChangeLightColor(Color.yellow);
-            MoveStraightTowards(npc, nextWaypoint.transform.position);
-            Quaternion turretRotation = Quaternion.LookRotation(tank.transform.forward, tank.turret.transform.up);
-            tank.turret.rotation = Quaternion.Slerp(tank.turret.rotation, turretRotation, Time.deltaTime * curRotSpeed);
-        }
-        else if (nextWaypoint != destination)
-        {
-            nextWaypoint = tank.destPath.Pop();
         }
     }
 }

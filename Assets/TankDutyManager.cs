@@ -34,12 +34,22 @@ public class TankDutyManager : MonoBehaviour
                 if (index > AllTanks.Count)
                     index = 0;
             }
+
         }
 
-        foreach (int index in fastIndexes)
+        for (int i = 0; i < AllTanks.Count; i++)
         {
-            AllTanks[index].TankClasses.Add("Fast");
-            AllTanks[index].AuraLight.color = Color.red;
+            if (fastIndexes.Contains(i))
+            {
+                AllTanks[i].TankClasses.Add("Fast");
+                AllTanks[i].AuraLight.color = Color.red;
+                fastIndexes.Remove(i);
+            }
+            else
+            {
+                AllTanks[i].TankClasses.Add("Normal");
+                AllTanks[i].SightLightOff();
+            }
         }
     }
 

@@ -20,8 +20,9 @@ public class SoundDetect : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        
-        EventManagerDel.TriggerEvent("Sound Detected");
-
+        if (other.CompareTag("Player"))
+        {
+            EventManagerDel.TriggerEvent("Sound Detected");
+        }
     }
 }

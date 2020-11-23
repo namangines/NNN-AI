@@ -9,11 +9,12 @@ public class DetectForEvents : MonoBehaviour
 
     public GameObject cube;
 
-    void OnEnable()
+
+    void Start()
     {
         EventManagerDel.StartListening("Sound Detected", playerHeard);
     }
-
+    
     void OnDisable()
     {
         EventManagerDel.StopListening("Sound Detected", playerHeard);

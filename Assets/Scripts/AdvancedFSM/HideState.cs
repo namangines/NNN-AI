@@ -19,7 +19,7 @@ public class HideState : FSMState
         if (distToPlayer <= tank.Sight.farClipPlane / 2 && tank.HasLineOfSight(player))
         {
             Debug.Log("Switch to Attack state");
-            tank.LightOn();
+            tank.AllLightOn();
             tank.remainHidden = false; //Ninja tanks should, in the future, chase the player after being revealed
             tank.SetTransition(Transition.ReachPlayer);
         }
@@ -33,14 +33,14 @@ public class HideState : FSMState
 
         if (waitTimer >= hidetimer)
         {
-            tank.LightOn();
+            tank.AllLightOn();
             tank.SetTransition(Transition.RestedLongEnough);
         }
     }
 
     public override void Act(Transform player, Transform npc)
     {
-        tank.LightOff();
+        tank.AllLightOff();
         if(!tank.remainHidden)
             waitTimer += Time.deltaTime;
     }

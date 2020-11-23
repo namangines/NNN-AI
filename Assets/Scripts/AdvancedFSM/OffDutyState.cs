@@ -47,14 +47,8 @@ public class OffDutyState : FSMState
 
     public override void Act(Transform player, Transform npc)
     {
-        if (tank.destPath == null)
-        {
-            WaypointManager manager = WaypointManager.Instance;
-            tank.destPath = manager.Path(manager.GetClosestWaypoint(npc.position), destination);
-            nextWaypoint = tank.destPath.Pop();
-        }
-        else if (nextWaypoint == null)
-            nextWaypoint = tank.destPath.Pop();
+        tank.NavigateToPosition(destination.transform);
+
 
         float arbitrarydisttopoint = 75f;
 
@@ -68,21 +62,12 @@ public class OffDutyState : FSMState
             }
 
         }
-        else if (Vector3.Distance(npc.position, nextWaypoint.transform.position) > arbitrarydisttopoint)
-        {
-            tank.ChangeLightColor(Color.green);
-            MoveStraightTowards(npc, nextWaypoint.transform.position);
-            Quaternion turretRotation = Quaternion.LookRotation(nextWaypoint.transform.position - tank.turret.position);
-            tank.turret.rotation = Quaternion.Slerp(tank.turret.rotation, turretRotation, Time.deltaTime * curRotSpeed);
-            //FSMGizmoDrawer.DrawLine(npc.position, nextWaypoint.transform.position, Color.blue);
-        }
-        else if (nextWaypoint != destination)
-        {
-            tank.ChangeLightColor(new Color(0, .75f, 0));
-            nextWaypoint = tank.destPath.Pop();
-        }
         else
         {
+            tank.ChangeLightColor(Color.green);
+            Quaternion turretRotation = Quaternion.LookRotation(destination.transform.position - tank.turret.position);
+            tank.turret.rotation = Quaternion.Slerp(tank.turret.rotation, turretRotation, Time.deltaTime * curRotSpeed);
+            //FSMGizmoDrawer.DrawLine(npc.position, nextWaypoint.transform.position, Color.blue);
             Debug.Log("Reached endzone");
         }
     }

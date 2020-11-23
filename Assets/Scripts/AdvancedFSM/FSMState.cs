@@ -94,7 +94,7 @@ public abstract class FSMState
             return map[trans];
         }
 
-        Debug.LogError("FSMState ERROR: " + trans+ " Transition passed to the State was not on the list");
+        Debug.LogWarning("FSMState WARNING: " + trans+ " Transition passed to the State was not on the list");
         return FSMStateID.None;
     }
 
@@ -123,6 +123,18 @@ public abstract class FSMState
     //    destPos = waypoints[rndIndex].position + rndPosition;
     //}
 
+    protected void MoveTowards(Transform moveable, Vector3 target)
+    {
+        //2. Rotate to the target point
+        Quaternion targetRotation = Quaternion.LookRotation(target - moveable.position);
+        moveable.rotation = Quaternion.Slerp(moveable.rotation, targetRotation, Time.deltaTime * curRotSpeed);
+
+        //3. Go Forward
+        moveable.Translate(Vector3.forward * Time.deltaTime * curSpeed);
+    }
+    /// <summary>
+    /// Just here for legacy reasons in case navmesh breaks beyond recognition
+    /// </summary>
     protected void MoveStraightTowards(Transform moveable, Vector3 target)
     {
         //2. Rotate to the target point
