@@ -9,10 +9,11 @@ public class PlayerTankController : MonoBehaviour
 	
     private Transform Turret;
     private Transform bulletSpawnPoint;    
-    private float curSpeed, targetSpeed, rotSpeed;
+    private float curSpeed, targetSpeed;
+    public float rotSpeed;
     private float turretRotSpeed = 10.0f;
-    private float maxForwardSpeed = 250.0f;
-    private float maxBackwardSpeed = -200.0f;
+    public float maxForwardSpeed = 250.0f;
+    public float maxBackwardSpeed = -200.0f;
 
     //Bullet shooting rate
     protected float shootRate = 1.2f;
