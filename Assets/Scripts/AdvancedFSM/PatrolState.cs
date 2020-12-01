@@ -12,6 +12,7 @@ public class PatrolState : FSMState
         curRotSpeed = 1.8f;
         curSpeed = 130.0f;
         waitTimer = waitconst;
+        destPos = tank.transform.position;
     }
 
     public override void Reason(Transform player, Transform npc)
@@ -61,39 +62,25 @@ public class PatrolState : FSMState
 
     public override void Act(Transform player, Transform npc)
     {
-        float arbitrarydisttopoint = 75f;
-
-        WaypointManager manager = WaypointManager.Instance;
-        //1. Find another random patrol point if the current point is reached
-        if (destination == null)
+        if (tank.TankClasses.Contains("Guard"))
         {
-            waitTimer = waitconst;
-            destination = manager.GetRandomWaypoint(manager.GetClosestWaypoint(npc.position));
-            tank.NavigateToPosition(destination.transform);
+            tank.NavigateToPosition(destPos);
         }
-
-
-        if (Vector3.Distance(npc.position, destination.transform.position) < arbitrarydisttopoint) //if final patrolpoint reached;
+        else if (tank.TankClasses.Contains("Patrol"))
         {
-            if (waitTimer > 0 && !tank.TankClasses.Contains("Normal"))
+            tank.NavigateToPosition(tank.Waypoints[tank.currentWaypoint]);
+            if(Vector3.Distance(tank.transform.position, tank.Waypoints[tank.currentWaypoint].position) < 75f)
             {
-                tank.ChangeLightColor(new Color(0, .6f, .6f));
-                Transform turret = npc.GetComponent<NPCTankController>().turret;
-                Quaternion turretRotation = Quaternion.AngleAxis(60 * Time.deltaTime, Vector3.up);
-                turret.rotation = turretRotation * turret.rotation;
-                waitTimer -= Time.deltaTime;
+                if (waitTimer > 10)
+                {
+                    waitTimer = 0;
+                    tank.currentWaypoint++;
+                    if (tank.currentWaypoint >= tank.Waypoints.Count)
+                        tank.currentWaypoint = 0;
+                }
+                else
+                    waitTimer += Time.deltaTime;
             }
-            else
-            {
-                waitTimer = waitconst;
-                destination = null; //reset destination
-            }
-        }
-        else
-        {
-            tank.ChangeLightColor(Color.blue);
-            Quaternion turretRotation = Quaternion.LookRotation(tank.transform.forward, tank.turret.transform.up);
-            tank.turret.rotation = Quaternion.Slerp(tank.turret.rotation, turretRotation, Time.deltaTime * curRotSpeed);
         }
     }
 
@@ -148,22 +135,17 @@ public class PatrolState : FSMState
 
         WaypointManager manager = WaypointManager.Instance;
         //1. Find another random patrol point if the current point is reached
-        if (tank.destPath == null)
+        if (destination == null)
         {
             waitTimer = waitconst;
             destination = manager.GetRandomWaypoint(manager.GetClosestWaypoint(npc.position));
-            //Debug.Log("Finding path for patrol...");
-            tank.destPath = manager.Path(manager.GetClosestWaypoint(npc.position), destination);
-            //Debug.Log("Patrol path is " + tank.destPath.Count + " nodes long");
-            nextWaypoint = tank.destPath.Pop();
+            tank.NavigateToPosition(destination.transform);
         }
-        else if (nextWaypoint == null)
-            nextWaypoint = tank.destPath.Pop();
 
 
         if (Vector3.Distance(npc.position, destination.transform.position) < arbitrarydisttopoint) //if final patrolpoint reached;
         {
-            if (waitTimer > 0)
+            if (waitTimer > 0 && !tank.TankClasses.Contains("Normal"))
             {
                 tank.ChangeLightColor(new Color(0, .6f, .6f));
                 Transform turret = npc.GetComponent<NPCTankController>().turret;
@@ -174,19 +156,14 @@ public class PatrolState : FSMState
             else
             {
                 waitTimer = waitconst;
-                tank.destPath = null; //reset destination
+                destination = null; //reset destination
             }
         }
-        else if (Vector3.Distance(npc.position, nextWaypoint.transform.position) > arbitrarydisttopoint)
+        else
         {
             tank.ChangeLightColor(Color.blue);
-            MoveTowards(npc, nextWaypoint.transform.position);
             Quaternion turretRotation = Quaternion.LookRotation(tank.transform.forward, tank.turret.transform.up);
             tank.turret.rotation = Quaternion.Slerp(tank.turret.rotation, turretRotation, Time.deltaTime * curRotSpeed);
-        }
-        else if (nextWaypoint != destination)
-        {
-            nextWaypoint = tank.destPath.Pop();
         }
     }
 }

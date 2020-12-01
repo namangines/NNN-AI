@@ -25,6 +25,9 @@ public class NPCTankController : AdvancedFSM
 
     private NavMeshAgent navAgent;
 
+    public List<Transform> Waypoints;
+    public int currentWaypoint = 0;
+
     //Initialize the Finite state machine for the NPC tank
     protected override void Initialize()
     {
@@ -48,16 +51,13 @@ public class NPCTankController : AdvancedFSM
         turret = gameObject.transform.GetChild(0).transform;
         bulletSpawnPoint = turret.GetChild(0).transform;
 
-        //Register listeners
-        if (TankClasses.Contains("Normal"))
-        {
-            EventManagerDel.StartListening("Sound Detected",
-                delegate
-                {
-                    SetTransition(Transition.SawPlayer);
-                }
-            );
-        }
+
+        EventManagerDel.StartListening("Sound Detected",
+            delegate
+            {
+                SetTransition(Transition.SawPlayer);
+            }
+        );
 
 
         //Start Doing the Finite State Machine
@@ -80,9 +80,9 @@ public class NPCTankController : AdvancedFSM
         CurrentState.Act(playerTransform, transform);
     }
 
-    public void SetTransition(Transition t) 
-    { 
-        PerformTransition(t); 
+    public void SetTransition(Transition t)
+    {
+        PerformTransition(t);
     }
 
     private void ConstructFSM()
@@ -264,7 +264,7 @@ public class NPCTankController : AdvancedFSM
         RaycastHit hit;
         if (Physics.Raycast(SightPoint.position, target.transform.position - SightPoint.position, out hit, Sight.farClipPlane, Physics.DefaultRaycastLayers, QueryTriggerInteraction.UseGlobal))
         {
-            if(target == hit.collider)
+            if (target == hit.collider)
             {
                 return true;
             }
