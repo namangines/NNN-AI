@@ -62,6 +62,8 @@ public class PatrolState : FSMState
 
     public override void Act(Transform player, Transform npc)
     {
+        float arbitrarydisttopoint = 5f;
+
         if (tank.TankClasses.Contains("Guard"))
         {
             tank.NavigateToPosition(destPos);
@@ -69,7 +71,7 @@ public class PatrolState : FSMState
         else if (tank.TankClasses.Contains("Patrol"))
         {
             tank.NavigateToPosition(tank.Waypoints[tank.currentWaypoint]);
-            if(Vector3.Distance(tank.transform.position, tank.Waypoints[tank.currentWaypoint].position) < 75f)
+            if (Vector3.Distance(tank.transform.position, tank.Waypoints[tank.currentWaypoint].position) < arbitrarydisttopoint)
             {
                 if (waitTimer > 10)
                 {
@@ -82,6 +84,7 @@ public class PatrolState : FSMState
                     waitTimer += Time.deltaTime;
             }
         }
+
     }
 
     //Just keeping these around for now in case something breaks with the navmesh implementation
@@ -131,7 +134,7 @@ public class PatrolState : FSMState
     }
     public void Act_OLD(Transform player, Transform npc)
     {
-        float arbitrarydisttopoint = 75f;
+        float arbitrarydisttopoint = 5f;
 
         WaypointManager manager = WaypointManager.Instance;
         //1. Find another random patrol point if the current point is reached

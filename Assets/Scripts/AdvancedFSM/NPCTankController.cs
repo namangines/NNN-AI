@@ -18,7 +18,7 @@ public class NPCTankController : AdvancedFSM
 
     public int health;
     public float timeSinceOffduty = 0.0f;
-    public bool remainHidden = true;
+    public bool remainHidden = false;
 
     // We overwrite the deprecated built-in `rigidbody` variable.
     new private Rigidbody rigidbody;
