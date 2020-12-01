@@ -2,6 +2,8 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
+    <CscToolPath>C:\Program Files\Unity\Hub\Editor\2019.4.8f1\Editor\Data\Tools\RoslynScripts</CscToolPath>
+    <CscToolExe>unity_csc.bat</CscToolExe>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -52,9 +54,6 @@
     <UnityVersion>2019.4.8f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="UnityEngine">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2019.4.8f1\Editor\Data\Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
@@ -96,6 +95,8 @@
     <Compile Include="Assets\Scripts\SimpleFSM\FSMSimple.cs" />
     <Compile Include="Assets\Scripts\SimpleFSM\SimpleFSM.cs" />
     <Compile Include="Assets\Scripts\WaypointManager.cs" />
+    <Compile Include="Assets\Scripts\animScripts\animationController.cs" />
+    <Compile Include="Assets\Scripts\animScripts\movement.cs" />
     <Compile Include="Assets\Scripts\startingText.cs" />
     <Compile Include="Assets\TankDutyManager.cs" />
     <Compile Include="Assets\TankMonitor.cs" />
@@ -638,61 +639,47 @@
     <Reference Include="Boo.Lang">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.8f1/Editor/Data/MonoBleedingEdge/lib/mono/unityscript/Boo.Lang.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.Timeline.Editor">
+      <HintPath>C:/Users/nmang/Documents/GitHub/NNN-AI/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.VSCode.Editor">
+      <HintPath>C:/Users/nmang/Documents/GitHub/NNN-AI/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ProBuilder">
+      <HintPath>C:/Users/nmang/Documents/GitHub/NNN-AI/Library/ScriptAssemblies/Unity.ProBuilder.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ProBuilder.Editor">
+      <HintPath>C:/Users/nmang/Documents/GitHub/NNN-AI/Library/ScriptAssemblies/Unity.ProBuilder.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ProBuilder.AssetIdRemapUtility">
+      <HintPath>C:/Users/nmang/Documents/GitHub/NNN-AI/Library/ScriptAssemblies/Unity.ProBuilder.AssetIdRemapUtility.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro.Editor">
+      <HintPath>C:/Users/nmang/Documents/GitHub/NNN-AI/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>C:/Users/nmang/Documents/GitHub/NNN-AI/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Timeline">
+      <HintPath>C:/Users/nmang/Documents/GitHub/NNN-AI/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.CollabProxy.Editor">
+      <HintPath>C:/Users/nmang/Documents/GitHub/NNN-AI/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Rider.Editor">
+      <HintPath>C:/Users/nmang/Documents/GitHub/NNN-AI/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ProBuilder.AddOns.Editor">
+      <HintPath>C:/Users/nmang/Documents/GitHub/NNN-AI/Library/ScriptAssemblies/Unity.ProBuilder.AddOns.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>C:/Users/nmang/Documents/GitHub/NNN-AI/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.UI">
+      <HintPath>C:/Users/nmang/Documents/GitHub/NNN-AI/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+    </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="Unity.Timeline.Editor.csproj">
-      <Project>{14F62B34-E151-B0BB-E5EB-45E222B689BD}</Project>
-      <Name>Unity.Timeline.Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.VSCode.Editor.csproj">
-      <Project>{8E32D2B5-5102-D802-75CF-F80883A1829C}</Project>
-      <Name>Unity.VSCode.Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.ProBuilder.csproj">
-      <Project>{C3B03167-D59C-9661-2377-00FD5F084AD0}</Project>
-      <Name>Unity.ProBuilder</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.ProBuilder.Editor.csproj">
-      <Project>{284BB8CB-42CC-2E67-902B-788A31B317AA}</Project>
-      <Name>Unity.ProBuilder.Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.ProBuilder.AssetIdRemapUtility.csproj">
-      <Project>{67D03D75-1FCC-8468-BBC2-5A749D80BB6E}</Project>
-      <Name>Unity.ProBuilder.AssetIdRemapUtility</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.TextMeshPro.Editor.csproj">
-      <Project>{0BCF3DA3-750C-5C31-2FEB-99E9ADB90C6D}</Project>
-      <Name>Unity.TextMeshPro.Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="UnityEngine.UI.csproj">
-      <Project>{76DD95DE-3AC1-9A9F-59AD-EA4FA71C0058}</Project>
-      <Name>UnityEngine.UI</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.Timeline.csproj">
-      <Project>{2ABD4E03-C9BF-BB26-349D-82D404157F19}</Project>
-      <Name>Unity.Timeline</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.CollabProxy.Editor.csproj">
-      <Project>{11CB0544-9044-C494-8DBA-9D70CE8840BA}</Project>
-      <Name>Unity.CollabProxy.Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.Rider.Editor.csproj">
-      <Project>{8F4B1582-75DC-EF90-5610-915FEAD92175}</Project>
-      <Name>Unity.Rider.Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.ProBuilder.AddOns.Editor.csproj">
-      <Project>{3B0ACB5F-D676-F9B9-1456-5A451423F3D0}</Project>
-      <Name>Unity.ProBuilder.AddOns.Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.TextMeshPro.csproj">
-      <Project>{4E8AF45F-6F04-0CD5-71AF-CBA70328A4D9}</Project>
-      <Name>Unity.TextMeshPro</Name>
-    </ProjectReference>
-    <ProjectReference Include="UnityEditor.UI.csproj">
-      <Project>{C86FECDB-A4E7-0D8B-0377-7A50D684D374}</Project>
-      <Name>UnityEditor.UI</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <ItemGroup></ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
