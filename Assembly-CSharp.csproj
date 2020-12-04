@@ -96,6 +96,7 @@
     <Compile Include="Assets\Scripts\SimpleFSM\FSMSimple.cs" />
     <Compile Include="Assets\Scripts\SimpleFSM\SimpleFSM.cs" />
     <Compile Include="Assets\Scripts\WaypointManager.cs" />
+    <Compile Include="Assets\Scripts\animScripts\EnemyAnimationController.cs" />
     <Compile Include="Assets\Scripts\animScripts\animationController.cs" />
     <Compile Include="Assets\Scripts\animScripts\movement.cs" />
     <Compile Include="Assets\Scripts\startingText.cs" />
