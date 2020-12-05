@@ -28,7 +28,7 @@ public class RepairState : FSMState
     {
         tank.NavigateToPosition(destination.transform);
 
-        if (Vector3.Distance(npc.position, destination.transform.position) < 75f) //if final patrolpoint reached;
+        if (Vector3.Distance(npc.position, destination.transform.position) < 5f) //if final patrolpoint reached;
         {
             if (tank.health < 100)
             {

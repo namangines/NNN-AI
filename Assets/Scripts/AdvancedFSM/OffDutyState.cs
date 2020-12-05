@@ -50,7 +50,7 @@ public class OffDutyState : FSMState
         tank.NavigateToPosition(destination.transform);
 
 
-        float arbitrarydisttopoint = 75f;
+        float arbitrarydisttopoint = 4f;
 
         if (Vector3.Distance(npc.position, destination.transform.position) < arbitrarydisttopoint) //if final patrolpoint reached;
         {

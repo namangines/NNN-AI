@@ -53,6 +53,8 @@ public class PlayerTankController : MonoBehaviour
             this.gameObject.SetActive(false);
         }
         elapsedTime += Time.deltaTime;
+
+        healthBar.text = "PLAYER HEALTH: " + health;
     }
     
     void UpdateControl()

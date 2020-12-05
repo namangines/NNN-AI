@@ -37,6 +37,7 @@ public class TankDutyManager : MonoBehaviour
 
         }
 
+        /*
         for (int i = 0; i < AllTanks.Count; i++)
         {
             if (fastIndexes.Contains(i))
@@ -51,6 +52,7 @@ public class TankDutyManager : MonoBehaviour
                 AllTanks[i].SightLightOff();
             }
         }
+        */
     }
 
     public float GetChanceToHide()

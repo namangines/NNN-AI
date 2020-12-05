@@ -5,6 +5,7 @@ using TankPathingSystem;
 public class PatrolState : FSMState
 {
     private float waitconst = 7.5f;
+    private Quaternion startingRotation;
     public PatrolState(NPCTankController tank) 
     {
         stateID = FSMStateID.Patrolling;
@@ -13,6 +14,7 @@ public class PatrolState : FSMState
         curSpeed = 130.0f;
         waitTimer = waitconst;
         destPos = tank.transform.position;
+        startingRotation = tank.transform.rotation;
     }
 
     public override void Reason(Transform player, Transform npc)
@@ -20,8 +22,9 @@ public class PatrolState : FSMState
         //1. Check if the player collider is inside the sight of the tank
         Collider playerc = player.GetComponent<Collider>();
 
-        if (tank.IsInsideSightFrustrum(playerc) && tank.HasLineOfSight(playerc) && !tank.TankClasses.Contains("Normal"))
+        if (tank.IsInsideSightFrustrum(playerc) && tank.HasLineOfSight(playerc))
         {
+            Debug.Log("Player Seen");
             if (TankDutyManager.Instance.GetChanceToHide() > Random.Range(0, 1.0f))
             {
                 waitTimer = 0f;
@@ -62,11 +65,16 @@ public class PatrolState : FSMState
 
     public override void Act(Transform player, Transform npc)
     {
+        tank.ChangeLightColor(Color.white);
         float arbitrarydisttopoint = 5f;
 
         if (tank.TankClasses.Contains("Guard"))
         {
             tank.NavigateToPosition(destPos);
+            if (Vector3.Distance(npc.position, destPos) < .5f)
+            {
+                npc.rotation = startingRotation;
+            }
         }
         else if (tank.TankClasses.Contains("Patrol"))
         {

@@ -8,7 +8,6 @@ using System.Collections.Specialized;
 public class ChaseState : FSMState
 {
     private const float giveUpTime = 8.0f;
-    private bool hitLast = false;
 
     public ChaseState(NPCTankController tank)
     {

@@ -37,8 +37,10 @@ public class NPCTankController : AdvancedFSM
         shootRate = .5f;
 
         //Get the target enemy(Player)
-        GameObject objPlayer = GameObject.FindGameObjectWithTag("Player");
-        playerTransform = objPlayer.transform;
+        GameObject[] objPlayer = GameObject.FindGameObjectsWithTag("Player");
+        if (objPlayer.Length > 1)
+            Debug.LogError("More than one player object tagged");
+        playerTransform = objPlayer[0].transform;
 
         //Get the rigidbody and nav mesh agent attached to this instance of tank NPC
         rigidbody = this.GetComponent<Rigidbody>();
@@ -307,6 +309,8 @@ public class NPCTankController : AdvancedFSM
     /// <param name="position"></param>
     public void NavigateToPosition(Vector3 position)
     {
+        if (position == Vector3.zero)
+            navAgent.ResetPath();
         navAgent.destination = position;
     }
     public void NavigateToPosition(Transform transform)

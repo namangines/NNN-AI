@@ -32,8 +32,6 @@ public class AttackState : FSMState
             Debug.Log("Switch to Patrol State");
             tank.destPath = null;
             tank.SetTransition(Transition.LostPlayer);
-            if (tank.TankClasses.Contains("Normal"))
-                tank.SightLightOff();
         }
 
         
@@ -43,8 +41,6 @@ public class AttackState : FSMState
         {
             tank.destPath = null;
             tank.SetTransition(Transition.Hurt);
-            if (tank.TankClasses.Contains("Normal"))
-                tank.SightLightOff();
         }
 
     }
@@ -52,17 +48,16 @@ public class AttackState : FSMState
     public override void Act(Transform player, Transform npc)
     {
         tank.ChangeLightColor(Color.red);
-        tank.SightLightOn();
 
         float dist = Vector3.Distance(npc.position, player.position);
-        if (dist >= tank.Sight.farClipPlane / 4)
-            //Set the target position as the player position
-            tank.NavigateToPosition(player.position);
+        tank.NavigateToPosition(player.position);
+        if (dist < 1)
+            tank.NavigateToPosition(Vector3.zero);
 
 
         //Always Turn the turret towards the player
         Transform turret = tank.turret;
-        Quaternion turretRotation = Quaternion.LookRotation(destPos - turret.position);
+        Quaternion turretRotation = Quaternion.LookRotation(player.position - turret.position);
         turret.rotation = Quaternion.Slerp(turret.rotation, turretRotation, Time.deltaTime * curRotSpeed);
 
         //Shoot bullet towards the player
